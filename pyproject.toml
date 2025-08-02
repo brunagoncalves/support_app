@@ -2,14 +2,13 @@
 name = "chat-app"
 version = "0.1.0"
 description = "Chat Interno"
-authors = [
-    {name = "SophiCodes",email = "sophicodes@gmail.com"}
-]
+authors = [{ name = "SophiCodes", email = "sophicodes@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.13, <4.0"
 dependencies = [
+    "fastapi[standard] (>=0.116.1,<0.117.0)",
+    "websockets (>=15.0.1,<16.0.0)"
 ]
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -21,10 +20,42 @@ pytest-cov = "^6.2.1"
 blue = "^0.9.1"
 isort = "^6.0.1"
 taskipy = "^1.14.1"
-
+ruff = "^0.12.7"
 
 [tool.poetry.group.doc.dependencies]
 mkdocs-material = "^9.6.16"
 mkdocstrings = "^0.30.0"
 mkdocstrings-python = "^1.16.12"
 
+[tool.ruff]
+line-length = 79
+
+#extend-exclude = [migrations]
+[tool.ruff.lint]
+preview = true
+select = [
+    "I", # Isort
+    "F", # Error
+    "E", # Pycodestyle
+    "W", # Pycodestyle
+    "PL", # Pylint
+    "PT", # Pytest
+
+]
+
+[tool.ruff.format]
+preview = true
+quote-style = "single"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.taskipy.tasks]
+lint = "ruff check"
+pre_format = "ruff check --fix"
+format = "ruff format"
+run = "poetry run fastapi dev chat_app/main.py"
+pre_test = "task lint"
+test = "pytest -s -x --cov=chat_app -vv"
+post_test = "coverage html"
