@@ -55,7 +55,7 @@ addopts = '-p no:warnings'
 lint = "ruff check"
 pre_format = "ruff check --fix"
 format = "ruff format"
-run = "poetry run fastapi dev chat_app/main.py"
+run = "poetry run fastapi dev server/main.py"
 pre_test = "task lint"
 test = "pytest -s -x --cov=chat_app -vv"
 post_test = "coverage html"
